@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "env": "dotenv -e .dev.vars"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -16,6 +17,7 @@
     "@mui/material": "^6.4.5",
     "@mui/material-nextjs": "^6.4.3",
     "@prisma/client": "^6.4.1",
+    "bcryptjs": "^3.0.2",
     "lucide-react": "^0.475.0",
     "next": "15.1.7",
     "next-auth": "^5.0.0-beta.25",
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

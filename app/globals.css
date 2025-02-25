@@ -17,8 +17,8 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: #fff;
+  background: #0a0a0a;
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -28,6 +28,10 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+#_rht_toaster {
+  font-family: "Geist";
 }
 
 .scrollbar::-webkit-scrollbar-track {

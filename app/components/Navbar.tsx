@@ -5,9 +5,11 @@ import { Contact, Home, LogOut, Settings, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
+import { signout } from '../actions';
 
 const Navbar = () => {
     const pathname = usePathname()
+    const [loading, setLoading] = React.useState<Boolean>(false)
 
     return (
         <Box sx={{ display: "flex", alignItems: "center", bgcolor: "#000", px: 2, p: 2, boxShadow: "0px 4px 4px 0 #00000010", position: "sticky", top: 0 }}>
@@ -42,8 +44,23 @@ const Navbar = () => {
                 </Link>
             </Box>
             <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                <Avatar sx={{ bgcolor: "#fff", color: "#000", height: 35, width: 35, }}>A</Avatar>
-                <Button variant="text" color="primary" startIcon={<LogOut size={15} name="user-round" strokeWidth={2} color="#fff" />}>Sign Out</Button>
+                <Avatar sx={{ bgcolor: "#fff", color: "#000", height: 35, width: 35, }} src=''>A</Avatar>
+                <Button
+                    onClick={async () => {
+                        try {
+                            setLoading(true)
+                            await signout()
+                            setLoading(false)
+                        } catch (error) {
+                            setLoading(false)
+                        }
+                    }}
+                    variant="text"
+                    color="primary"
+                    disabled={loading as boolean}
+                    startIcon={<LogOut size={15} name="user-round" strokeWidth={2} color="#fff" />}>
+                    Sign Out
+                </Button>
             </Box>
         </Box>
     )

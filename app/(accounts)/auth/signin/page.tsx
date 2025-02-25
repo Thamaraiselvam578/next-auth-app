@@ -2,45 +2,61 @@
 
 import { Box, Stack, Typography, Grid2 as Grid, TextField, Button, Divider } from '@mui/material'
 import Image from 'next/image'
-import React, { useActionState } from 'react'
+import React, { useActionState, useEffect, useState } from 'react'
 import logo from '../__assets/next.svg'
 import Link from 'next/link'
 import GoogleSigninButton from '@/app/components/GoogleSigninButton'
 import GitHubSigninButton from '@/app/components/GitHubSigninButton'
-import { signUpWithCredentials } from '@/app/actions'
+import { toast } from 'react-hot-toast'
+import { signInWithCredentials } from '@/app/actions'
+import { signinSchema } from '@/app/lib/schema'
 
-const SignIn = () => {
-    const [state, formAction, isPending] = useActionState(signUpWithCredentials, { message: "" })
+const Signin = () => {
+    const [loading, setLoading] = useState<Boolean>(false)
+    const [errors, setErrors] = useState<{ email?: boolean, password?: boolean }>({})
+
+    const onSubmit = async (formData: FormData) => {
+        try {
+            const email = formData.get("email") as string
+            const password = formData.get("password") as string
+            setLoading(true)
+            const { message, status } = await signInWithCredentials({ email, password })
+            if (status === "success") {
+                toast.success(message)
+            } else {
+                toast.error(message)
+                console.log('message: ', message);
+            }
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log('error: ', error);
+        }
+    }
+
     return (
         <Stack sx={{ minHeight: '100vh', justifyContent: 'center', alignItems: 'center' }}>
-            <Box sx={{ borderRadius: 2, background: "#f5f5f503", width: 1, maxWidth: { xs: "95%", md: "80%", lg: "60%" } }}>
-                <Grid container spacing={2}>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <Box sx={{ height: 1, borderRadius: "8px 0 0px 8px", background: "url(https://images.unsplash.com/photo-1739208831882-8be117b564ce?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)", backgroundSize: 'cover' }}></Box>
-                    </Grid>
+            <Box sx={{ borderRadius: 2, background: "#f5f5f503", width: 1, maxWidth: { xs: "95%", md: "80%", lg: "60%", xl: "55%" } }}>
+                <Grid container spacing={0}>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Box sx={{ px: 2, py: { xs: 2, sm: 3, md: 4 }, borderRadius: 2, textAlign: "center" }}>
                             <Image src={logo} height={30} width={70} alt="logo" style={{ filter: "invert(1)" }} />
                             <Typography variant="body2" sx={{ opacity: .7, maxWidth: 400, mx: 'auto' }}>Signin with your crendential consectetur adipisicing elit. Porro, nemo?</Typography>
                             <Box sx={{ mt: 3 }}>
-                                <form action={formAction}>
+                                <form action={(formData)=>{
+                                    onSubmit(formData)
+                                }}>
                                     <Stack gap={2} sx={{ textAlign: "start" }}>
-                                        <Box>
-                                            <Typography variant="body2" sx={{ m: 1, "& sup": { color: "error.main" } }}>Name<sup>*</sup></Typography>
-                                            <TextField
-                                                fullWidth
-                                                required
-                                                name='name'
-                                                placeholder="Enter Name"
-                                            />
-                                        </Box>
                                         <Box>
                                             <Typography variant="body2" sx={{ m: 1, "& sup": { color: "error.main" } }}>Email<sup>*</sup></Typography>
                                             <TextField
                                                 fullWidth
-                                                required
-                                                name='email'
                                                 type='email'
+                                                name='email'
+                                                required
+                                                onBlur={e => {
+
+                                                }}
                                                 placeholder="Enter email or username"
                                             />
                                         </Box>
@@ -52,13 +68,13 @@ const SignIn = () => {
                                                 required
                                                 name='password'
                                                 placeholder="Enter password"
+                                                onBlur={e => {
+
+                                                }}
                                             />
-                                            {/* <Box sx={{ textAlign: "end", mt:.5 }}>
-                                                <Typography component="small" sx={{ fontSize: 12 }} color="initial">Forgot password?</Typography>
-                                            </Box> */}
                                         </Box>
-                                        <Button variant="contained" disabled={isPending} type='submit' color="primary">
-                                            Signup
+                                        <Button variant="contained" disabled={loading as boolean} type='submit' color="primary">
+                                            Signin
                                         </Button>
                                     </Stack>
                                 </form>
@@ -69,10 +85,12 @@ const SignIn = () => {
                             <Box sx={{ display: "flex", gap: 2, mb: 3, "form": { width: 1 } }}>
                                 <GoogleSigninButton />
                                 <GitHubSigninButton />
-
                             </Box>
-                            <Typography variant="body2" sx={{ textAlign: "start", color: "#ffffff40", "& a": { textDecoration: "none", opacity: 1 } }}>Already have account? <Link href={"/auth/signin"}>Signin here.</Link></Typography>
+                            <Typography variant="body2" sx={{ textAlign: "start", color: "#ffffff40", "& a": { textDecoration: "none", opacity: 1 } }}>Don't have account? <Link href={"/auth/signup"}>Register here.</Link></Typography>
                         </Box>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <Box sx={{ height: 1, borderRadius: "0 8px 8px 0", background: "url(https://images.unsplash.com/photo-1726064855900-54128f083192)", backgroundSize: 'cover' }}></Box>
                     </Grid>
                 </Grid>
             </Box>
@@ -80,4 +98,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default Signin
