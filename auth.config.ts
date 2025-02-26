@@ -10,6 +10,17 @@ export default {
         signIn: "/auth/signin",
         signOut: "/",
     },
+    // callbacks: {
+    //     jwt({ token, user, trigger, session }) {
+    //         return token;
+    //     },
+    //     session({ token, session, user }: any) {
+    //         if (session && session.user) {
+    //             session.user.id = token.sub;
+    //         }
+    //         return session;
+    //     },
+    // },
     providers: [
         GitHub,
         Credentials({
@@ -22,7 +33,7 @@ export default {
                 },
                 password: { label: "Password", type: "password" },
             },
-            authorize: async (credentials) => {
+            async authorize(credentials: any): Promise<any> {
                 const { error } = signinSchema.safeParse(credentials);
                 if (error) return null;
 

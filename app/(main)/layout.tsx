@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Navbar from "../components/Navbar";
 
 export default function RootLayout({
@@ -9,7 +9,11 @@ export default function RootLayout({
     return (
         <Box sx={{ maxHeight: "100vh", overflowY: "auto" }} className="scrollbar">
             <Navbar />
-            {children}
+            <Container maxWidth={"lg"}>
+                <Box>
+                    {children}
+                </Box>
+            </Container>
         </Box>
     );
 }

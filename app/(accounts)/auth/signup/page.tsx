@@ -2,15 +2,23 @@
 
 import { Box, Stack, Typography, Grid2 as Grid, TextField, Button, Divider } from '@mui/material'
 import Image from 'next/image'
-import React, { useActionState } from 'react'
+import React, { useActionState, useEffect } from 'react'
 import logo from '../__assets/next.svg'
 import Link from 'next/link'
 import GoogleSigninButton from '@/app/components/GoogleSigninButton'
 import GitHubSigninButton from '@/app/components/GitHubSigninButton'
-import { signUpWithCredentials } from '@/app/actions'
+import { signUpWithCredentials } from '@/app/lib/actions'
+import { alertMsg } from '@/utils/basicUtils'
 
-const SignIn = () => {
-    const [state, formAction, isPending] = useActionState(signUpWithCredentials, { message: "" })
+const Signup = () => {
+    const [state, formAction, isPending] = useActionState(signUpWithCredentials, { message: "", status: "" })
+
+    useEffect(() => {
+        if (state.message) {
+            alertMsg(state.message, state.status)
+        }
+    }, [state.message])
+
     return (
         <Stack sx={{ minHeight: '100vh', justifyContent: 'center', alignItems: 'center' }}>
             <Box sx={{ borderRadius: 2, background: "#f5f5f503", width: 1, maxWidth: { xs: "95%", md: "80%", lg: "60%" } }}>
@@ -53,9 +61,6 @@ const SignIn = () => {
                                                 name='password'
                                                 placeholder="Enter password"
                                             />
-                                            {/* <Box sx={{ textAlign: "end", mt:.5 }}>
-                                                <Typography component="small" sx={{ fontSize: 12 }} color="initial">Forgot password?</Typography>
-                                            </Box> */}
                                         </Box>
                                         <Button variant="contained" disabled={isPending} type='submit' color="primary">
                                             Signup
@@ -69,7 +74,6 @@ const SignIn = () => {
                             <Box sx={{ display: "flex", gap: 2, mb: 3, "form": { width: 1 } }}>
                                 <GoogleSigninButton />
                                 <GitHubSigninButton />
-
                             </Box>
                             <Typography variant="body2" sx={{ textAlign: "start", color: "#ffffff40", "& a": { textDecoration: "none", opacity: 1 } }}>Already have account? <Link href={"/auth/signin"}>Signin here.</Link></Typography>
                         </Box>
@@ -80,4 +84,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default Signup

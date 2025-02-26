@@ -2,37 +2,22 @@
 
 import { Box, Stack, Typography, Grid2 as Grid, TextField, Button, Divider } from '@mui/material'
 import Image from 'next/image'
-import React, { useActionState, useEffect, useState } from 'react'
+import React, { useActionState, useEffect } from 'react'
 import logo from '../__assets/next.svg'
 import Link from 'next/link'
 import GoogleSigninButton from '@/app/components/GoogleSigninButton'
 import GitHubSigninButton from '@/app/components/GitHubSigninButton'
-import { toast } from 'react-hot-toast'
-import { signInWithCredentials } from '@/app/actions'
-import { signinSchema } from '@/app/lib/schema'
+import { signInWithCredentials } from '@/app/lib/actions'
+import { alertMsg } from '@/utils/basicUtils'
 
 const Signin = () => {
-    const [loading, setLoading] = useState<Boolean>(false)
-    const [errors, setErrors] = useState<{ email?: boolean, password?: boolean }>({})
+    const [errors, onSubmit, loading] = useActionState(signInWithCredentials, { message: "", status: "" })
 
-    const onSubmit = async (formData: FormData) => {
-        try {
-            const email = formData.get("email") as string
-            const password = formData.get("password") as string
-            setLoading(true)
-            const { message, status } = await signInWithCredentials({ email, password })
-            if (status === "success") {
-                toast.success(message)
-            } else {
-                toast.error(message)
-                console.log('message: ', message);
-            }
-            setLoading(false)
-        } catch (error) {
-            setLoading(false)
-            console.log('error: ', error);
+    useEffect(() => {
+        if (errors.message) {
+            alertMsg(errors.message, errors.status)
         }
-    }
+    }, [errors.message])
 
     return (
         <Stack sx={{ minHeight: '100vh', justifyContent: 'center', alignItems: 'center' }}>
@@ -43,9 +28,7 @@ const Signin = () => {
                             <Image src={logo} height={30} width={70} alt="logo" style={{ filter: "invert(1)" }} />
                             <Typography variant="body2" sx={{ opacity: .7, maxWidth: 400, mx: 'auto' }}>Signin with your crendential consectetur adipisicing elit. Porro, nemo?</Typography>
                             <Box sx={{ mt: 3 }}>
-                                <form action={(formData)=>{
-                                    onSubmit(formData)
-                                }}>
+                                <form action={onSubmit}>
                                     <Stack gap={2} sx={{ textAlign: "start" }}>
                                         <Box>
                                             <Typography variant="body2" sx={{ m: 1, "& sup": { color: "error.main" } }}>Email<sup>*</sup></Typography>
@@ -54,9 +37,6 @@ const Signin = () => {
                                                 type='email'
                                                 name='email'
                                                 required
-                                                onBlur={e => {
-
-                                                }}
                                                 placeholder="Enter email or username"
                                             />
                                         </Box>
@@ -68,9 +48,6 @@ const Signin = () => {
                                                 required
                                                 name='password'
                                                 placeholder="Enter password"
-                                                onBlur={e => {
-
-                                                }}
                                             />
                                         </Box>
                                         <Button variant="contained" disabled={loading as boolean} type='submit' color="primary">
