@@ -15,7 +15,6 @@ export const signInWithCredentials = async (credentials: SigninSchema) => {
             return { message: "Please provide valid credentials", status: "error" }
         }
         const user = await signIn("credentials", { ...data, redirectTo: "/" },);
-        console.log('user: ', user);
     } catch (error) {
         if (error instanceof AuthError) {
             return { message: error.message, status: "error" }
@@ -26,7 +25,7 @@ export const signInWithCredentials = async (credentials: SigninSchema) => {
 
 export const signout = async () => {
     "use server";
-    await signOut({ redirect: true });
+    await signOut({ redirectTo: "/auth/signin" });
     return { message: "Signout successfully" };
 };
 
