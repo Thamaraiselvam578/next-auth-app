@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { signInWithProviders } from '../actions'
+import { signInWithProviders } from '@/app/lib/actions'
 import { Button } from '@mui/material'
 import GoogleIcon from '../assets/images/google.png'
 import Image from 'next/image'

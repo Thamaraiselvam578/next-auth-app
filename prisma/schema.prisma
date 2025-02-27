@@ -27,6 +27,7 @@ model User {
   task          Task[]
   Post          Post[]
   comments      Comments[]
+  notifications Notifications[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
@@ -120,4 +121,15 @@ model Comments {
   userId    String?
   Post      Post?    @relation(fields: [postId], references: [id])
   postId    Int?
+}
+
+model Notifications {
+  id        Int      @id @default(autoincrement())
+  head      String
+  body      String?
+  createdBy Json
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
