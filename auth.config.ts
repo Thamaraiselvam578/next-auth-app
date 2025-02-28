@@ -4,24 +4,15 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/prisma";
 import { signinSchema } from "./app/lib/schema";
+import Google from "next-auth/providers/google";
 
 export default {
     pages: {
         signIn: "/auth/signin",
         signOut: "/",
     },
-    // callbacks: {
-    //     jwt({ token, user, trigger, session }) {
-    //         return token;
-    //     },
-    //     session({ token, session, user }: any) {
-    //         if (session && session.user) {
-    //             session.user.id = token.sub;
-    //         }
-    //         return session;
-    //     },
-    // },
     providers: [
+        Google,
         GitHub,
         Credentials({
             name: "Credentials",
@@ -45,6 +36,9 @@ export default {
                 });
 
                 if (existing_user) {
+                    if (!existing_user.password) {
+                        throw new Error("Incorrect password")
+                    }
                     const matchPassword = bcrypt.compareSync(credentials.password as string, existing_user.password);
                     if (matchPassword) {
                         user = existing_user;

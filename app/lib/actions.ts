@@ -20,7 +20,7 @@ export const signInWithCredentials = async (prevState: any, formData: FormData) 
         await signIn("credentials", { ...data })
     } catch (error: any) {
         if (error instanceof AuthError) {
-            return { message: error.message, status: "error" }
+            return { message: error.cause?.err?.message, status: "error" }
         }
     }
     return { message: "Login successful", status: "success" }
@@ -43,7 +43,7 @@ export const signUpWithCredentials = async (prevState: any, formData: FormData) 
         }
         const password = saltAndHashPassword(formData.get("password") as string);
         await prisma.user.create({ data: { name, email, password } });
-        return { message: "Signin with credentials", status: "success" };
+        return { message: "Account Created Successfully", status: "success" };
     } catch (error: any) {
         return { message: error.message, status: "error" };
     }

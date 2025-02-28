@@ -8,13 +8,15 @@ import { usePathname } from 'next/navigation';
 import { signout } from '@/app/lib/actions';
 import { alertMsg } from '@/utils/basicUtils';
 import { useSession } from "next-auth/react"
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
     const { data } = useSession()
-    const pathname = usePathname()
     const [loading, setLoading] = React.useState<Boolean>(false)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const router = useRouter()
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -84,20 +86,25 @@ const Navbar = () => {
                         </Box>
                     </MenuItem>
                     <Divider />
-                    <MenuItem onClick={handleClose} sx={{ gap: 2 }}>
+                    <MenuItem onClick={(e: React.MouseEvent<HTMLElement>) => { router.push('/settings'); handleClose(e) }} sx={{ gap: 2 }}>
                         <Settings size={20} /> Settings
                     </MenuItem>
                     <Divider />
-                    <MenuItem color='error' onClick={async () => {
-                        try {
-                            setLoading(true)
-                            await signout()
-                            alertMsg("You have been signed out successfully", "success")
-                            setLoading(false)
-                        } catch (error) {
-                            setLoading(false)
-                        }
-                    }} sx={{ gap: 2 }}>
+                    <MenuItem
+                        color='error'
+                        disabled={loading as boolean}
+                        onClick={async () => {
+                            try {
+                                setLoading(true)
+                                await signout()
+                                alertMsg("You have been signed out successfully", "success")
+                                setLoading(false)
+                            } catch (error) {
+                                setLoading(false)
+                            }
+                        }}
+                        sx={{ gap: 2 }}
+                    >
                         <LogOut size={20} /> Logout
                     </MenuItem>
                 </Menu>

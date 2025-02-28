@@ -9,15 +9,21 @@ import GoogleSigninButton from '@/app/components/GoogleSigninButton'
 import GitHubSigninButton from '@/app/components/GitHubSigninButton'
 import { signUpWithCredentials } from '@/app/lib/actions'
 import { alertMsg } from '@/utils/basicUtils'
+import { useRouter } from 'next/navigation'
 
 const Signup = () => {
     const [state, formAction, isPending] = useActionState(signUpWithCredentials, { message: "", status: "" })
+    const router = useRouter()
+
 
     useEffect(() => {
-        if (state.message) {
+        if (state.message && !isPending) {
             alertMsg(state.message, state.status)
+            if (state?.status === "success") {
+                router.push("/auth/signin")
+            }
         }
-    }, [state.message])
+    }, [state.message, isPending, router])
 
     return (
         <Stack sx={{ minHeight: '100vh', justifyContent: 'center', alignItems: 'center' }}>

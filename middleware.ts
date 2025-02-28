@@ -14,4 +14,4 @@ export default auth(async (req) => {
     return NextResponse.next()
 })
 
-export const config = { matcher: ["/"] }
+export const config = { matcher: ["/", '/settings','/posts', '/tasks', '/contact'] }

@@ -1,12 +1,8 @@
 import { Box, Typography, Grid2 as Grid } from '@mui/material'
 import React from 'react'
-import BlogCard from '../components/BlogCard'
 import { auth } from '@/auth'
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import ReactApexChart from 'react-apexcharts';
 import Barchart from '../components/Barchart';
 import RadialChart from '../components/Radialchart';
 

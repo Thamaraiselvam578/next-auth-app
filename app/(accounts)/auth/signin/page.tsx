@@ -9,15 +9,20 @@ import GoogleSigninButton from '@/app/components/GoogleSigninButton'
 import GitHubSigninButton from '@/app/components/GitHubSigninButton'
 import { signInWithCredentials } from '@/app/lib/actions'
 import { alertMsg } from '@/utils/basicUtils'
+import { useRouter } from 'next/navigation';
 
 const Signin = () => {
     const [errors, onSubmit, loading] = useActionState(signInWithCredentials, { message: "", status: "" })
+    const router = useRouter()
 
     useEffect(() => {
-        if (errors.message) {
+        if (errors.message && !loading) {
             alertMsg(errors.message, errors.status)
+            if (errors.status === "success") {
+                router.push("/")
+            }
         }
-    }, [errors.message])
+    }, [errors, loading, router])
 
     return (
         <Stack sx={{ minHeight: '100vh', justifyContent: 'center', alignItems: 'center' }}>
